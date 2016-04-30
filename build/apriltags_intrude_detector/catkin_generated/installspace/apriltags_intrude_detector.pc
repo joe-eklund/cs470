@@ -1,0 +1,8 @@
+prefix=/home/theta/catkin_ws/install
+
+Name: apriltags_intrude_detector
+Description: Description of apriltags_intrude_detector
+Version: 0.0.0
+Cflags: -I/home/theta/catkin_ws/install/include
+Libs: -L/home/theta/catkin_ws/install/lib 
+Requires: roscpp message_runtime

@@ -1,0 +1,2 @@
+ColorBlobTracker:apriltags_intrude_detector:sphero_ros/bb8_bringup:sphero_ros/bb8_driver:sphero_ros/bb8_node:sphero_ros/sphero_bringup:sphero_ros/sphero_dashboard:sphero_ros/sphero_description:sphero_ros/sphero_driver:sphero_ros/sphero_node:sphero_ros/sphero_teleop
+-DCATKIN_DEVEL_PREFIX=/home/theta/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/theta/catkin_ws/install -G Unix Makefiles

@@ -1,0 +1,8 @@
+prefix=/home/theta/catkin_ws/install
+
+Name: sphero_dashboard
+Description: Description of sphero_dashboard
+Version: 0.1.2
+Cflags: 
+Libs: -L/home/theta/catkin_ws/install/lib 
+Requires: 

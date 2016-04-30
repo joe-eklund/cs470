@@ -1,0 +1,8 @@
+prefix=/home/theta/catkin_ws/devel
+
+Name: bb8_bringup
+Description: Description of bb8_bringup
+Version: 0.1.2
+Cflags: 
+Libs: -L/home/theta/catkin_ws/devel/lib 
+Requires: 

@@ -15,6 +15,7 @@ class Controller:
     def __init__(self):
         self.cmdVelPub = rospy.Publisher('cmd_vel', Twist, queue_size=1)
         self.trackposSub = rospy.Subscriber("tracked_pos", Pose2D, self.trackposCallback)
+        self.fields = []
 
     def trackposCallback(self, msg):
         # This function is continuously called
@@ -41,6 +42,19 @@ class Controller:
                 poly = resp.polygons[i]
                 # The polygon's id (just an integer, 0 is goal, all else is bad)
                 t_id = resp.ids[i]
+                x = 0;
+                y = 0;
+                for p in poly.points:
+                    x = x + int(p.x)
+                    y = y + int(p.y)
+                x = x/len(poly.points)
+                y = y/len(poly.points)
+                r = math.sqrt(math.pow(int(poly.points[0].x)-x,2) + math.pow(int(poly.points[0].y)-y,2))
+                s = 2 * r
+                fieldType = False
+                if t_id ==0:
+                    fieldType = True
+                self.fields.append(Field(x,y,.5,s,r,fieldType))
         except Exception, e:
             print "Exception: " + str(e)
         finally:
@@ -49,6 +63,14 @@ class Controller:
     def stop(self):
         self.stop = True
 
+class Field:
+    def __init__(self, xpos, ypos, alpha, s, r, fieldType):
+        self.xpos = xpos
+        self.ypos = ypos
+        self.alpha = alpha
+        self.s = s
+        self.r = r
+        self.type = fieldType
 
 class SpheroIntrudeForm(QtGui.QWidget):
     controller = Controller()

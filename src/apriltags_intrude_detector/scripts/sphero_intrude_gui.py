@@ -131,8 +131,8 @@ class TangentialField(Field):
             result[0] = (self.alpha * self.s * math.cos(theta))
             result[1] = (self.alpha * self.s * math.sin(theta))
         elif math.degrees(theta)<=60 or math.degrees(theta)>=120:
-            result[0] = -self.alpha * (self.s + self.r - distance) * math.cos(theta + math.pi/2)
-            result[1] = -self.alpha * (self.s + self.r - distance) * math.sin(theta + math.pi/2)
+            result[0] = -(self.s + self.r - distance) * math.cos(theta + math.pi/2)
+            result[1] = -(self.s + self.r - distance) * math.sin(theta + math.pi/2)
             result[0] += (self.alpha/4 * (distance - self.r) * math.cos(theta))
             result[1] += (self.alpha/4 * (distance - self.r) * math.sin(theta))
         else:

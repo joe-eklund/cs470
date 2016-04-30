@@ -94,7 +94,7 @@ class AttractiveField(Field):
 
 class RepulsiveField(Field):
     def calcVelocity(self, msg):
-        result = []
+        result = [0,0]
         distance = self.calculateDistance(int(msg.x), self.xpos, int(msg.y), self.ypos)
         theta = math.atan2(self.ypos - int(msg.y),self.xpos - int(msg.x))
         if distance < self.r:

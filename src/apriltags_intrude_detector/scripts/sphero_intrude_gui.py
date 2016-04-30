@@ -130,12 +130,14 @@ class TangentialField(Field):
         elif distance > (self.s + self.r):
             result[0] = (self.alpha * self.s * math.cos(theta))
             result[1] = (self.alpha * self.s * math.sin(theta))
-        elif math.degrees(theta)<60 or math.degrees(theta)>120:
+        elif math.degrees(theta)<=60 or math.degrees(theta)>=120:
             result[0] = -self.alpha * (self.s + self.r - distance) * math.cos(theta + math.pi/2)
             result[1] = -self.alpha * (self.s + self.r - distance) * math.sin(theta + math.pi/2)
+            result[0] += (self.alpha/4 * (distance - self.r) * math.cos(theta))
+            result[1] += (self.alpha/4 * (distance - self.r) * math.sin(theta))
         else:
-            result[0] = (self.alpha * self.s * math.cos(theta))
-            result[1] = (self.alpha * self.s * math.sin(theta))
+            result[0] = (self.alpha * (distance - self.r) * math.cos(theta))
+            result[1] = (self.alpha * (distance - self.r) * math.sin(theta))
         return result
 
 class RandomField(Field):

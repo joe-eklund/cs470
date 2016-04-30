@@ -21,9 +21,9 @@ class Controller:
         if not self.stop:
             twist = Twist()
             # Change twist.linear.x to be your desired x velocity
-            twist.linear.x = 0
+            twist.linear.x = 50.0
             # Change twist.linear.y to be your desired y velocity
-            twist.linear.y = 0
+            twist.linear.y = 50.0
             twist.linear.z = 0
             twist.angular.x = 0
             twist.angular.y = 0

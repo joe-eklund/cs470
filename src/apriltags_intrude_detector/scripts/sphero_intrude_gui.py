@@ -27,6 +27,8 @@ class Controller:
                 deltaX += field.calcVelocity(msg)[0]
                 deltaY += field.calcVelocity(msg)[1]
             # Change twist.linear.x to be your desired x velocity
+            print deltaX
+
             twist.linear.x = deltaX
             # Change twist.linear.y to be your desired y velocity
             twist.linear.y = deltaY
@@ -86,7 +88,7 @@ class AttractiveField(Field):
     def calcVelocity(self, msg):
         result = [0,0]
         distance = self.calculateDistance(int(msg.x), self.xpos, int(msg.y), self.ypos)
-        theta = math.atan2(-self.ypos + int(msg.y),self.xpos - int(msg.x))
+        theta = math.atan2(self.ypos - int(msg.y),self.xpos - int(msg.x))
         if distance < self.r:
             return result
         if self.r<=distance<=(self.s + self.r):

@@ -90,7 +90,7 @@ class AttractiveField(Field):
         elif distance > (self.s + self.r):
             result[0] = (self.alpha * self.s * math.cos(theta))
             result[1] = (self.alpha * self.s * math.sin(theta))
-        print "Delta X, Delta Y: " + ",".join(result)
+        print "Delta X, Delta Y: " + ",".join(str(x) for x in result)
         return result
 
 class RepulsiveField(Field):

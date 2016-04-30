@@ -24,7 +24,7 @@ class Controller:
             # Change twist.linear.x to be your desired x velocity
             twist.linear.x += self.fields[0].calcVelocity(msg)[0]
             # Change twist.linear.y to be your desired y velocity
-            twist.linear.y += self.fiels[0].calcVelocity(msg)[1]
+            twist.linear.y += self.fields[0].calcVelocity(msg)[1]
             twist.linear.z = 0
             twist.angular.x = 0
             twist.angular.y = 0

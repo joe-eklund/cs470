@@ -6,6 +6,7 @@ from geometry_msgs.msg import Twist, Pose2D
 from std_msgs.msg import ColorRGBA, Float32, Bool
 from apriltags_intrude_detector.srv import apriltags_intrude
 from apriltags_intrude_detector.srv import apriltags_info
+import random
 
 
 # You implement this class
@@ -63,6 +64,7 @@ class Controller:
                     self.fields.append(AttractiveField(x,y,.3,s,r))
                 else:
                     self.fields.append(RepulsiveField(x,y,.8,r*1.5,r))
+            self.fields.append(RandomField(0,0,0,0,0))
         except Exception, e:
             print "Exception: " + str(e)
         finally:
@@ -114,7 +116,31 @@ class RepulsiveField(Field):
         elif distance > (self.s + self.r):
             result[0] = 0
             result[1] = 0
+            return result
+
+class TangentialField(Field):
+    def calcVelocity(self, msg):
+        result = [0,0]
+        distance = self.calculateDistance(int(msg.x), self.xpos, int(msg.y), self.ypos)
+        theta = math.atan2(-self.ypos + int(msg.y),self.xpos - int(msg.x))
+        if distance < self.r:
+            return result
+        elif distance > (self.s + self.r):
+            result[0] = (self.alpha * self.s * math.cos(theta))
+            result[1] = (self.alpha * self.s * math.sin(theta))
+        elif math.degrees(theta)<60 or math.degrees(theta)>120:
+            result[0] = -self.alpha * (self.s + self.r - distance) * math.cos(theta + math.pi/2)
+            result[1] = -self.alpha * (self.s + self.r - distance) * math.sin(theta + math.pi/2)
+        else:
+            result[0] = (self.alpha * self.s * math.cos(theta))
+            result[1] = (self.alpha * self.s * math.sin(theta))
         return result
+
+class RandomField(Field):
+    def calcVelocity(self,msg):
+        deltaX = random.randint(-5,5)
+        deltaY = random.randint(-5,5)
+        return [deltaX, deltaY]
 
 class SpheroIntrudeForm(QtGui.QWidget):
     controller = Controller()

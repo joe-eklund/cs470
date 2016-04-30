@@ -21,10 +21,15 @@ class Controller:
         # This function is continuously called
         if not self.stop:
             twist = Twist()
+            deltaX = 0
+            deltaY = 0
+            for field in self.fields:
+                deltaX += field.calcVelocity(msg)[0]
+                deltaY += field.calcVelocity(msg)[1]
             # Change twist.linear.x to be your desired x velocity
-            twist.linear.x = self.fields[0].calcVelocity(msg)[0]
+            twist.linear.x = deltaX
             # Change twist.linear.y to be your desired y velocity
-            twist.linear.y = self.fields[0].calcVelocity(msg)[1]
+            twist.linear.y = deltaY
             twist.linear.z = 0
             twist.angular.x = 0
             twist.angular.y = 0
@@ -82,7 +87,6 @@ class AttractiveField(Field):
         result = [0,0]
         distance = self.calculateDistance(int(msg.x), self.xpos, int(msg.y), self.ypos)
         theta = math.atan2(-self.ypos + int(msg.y),self.xpos - int(msg.x))
-        print math.degrees(theta)
         if distance < self.r:
             return result
         if self.r<=distance<=(self.s + self.r):
@@ -91,22 +95,23 @@ class AttractiveField(Field):
         elif distance > (self.s + self.r):
             result[0] = (self.alpha * self.s * math.cos(theta))
             result[1] = (self.alpha * self.s * math.sin(theta))
-        print "Delta X, Delta Y: " + ",".join(str(x) for x in result)
         return result
 
 class RepulsiveField(Field):
     def calcVelocity(self, msg):
         result = [0,0]
         distance = self.calculateDistance(int(msg.x), self.xpos, int(msg.y), self.ypos)
-        theta = math.atan2(self.ypos - int(msg.y),self.xpos - int(msg.x))
+        theta = math.atan2(-self.ypos + int(msg.y),self.xpos - int(msg.x))
         if distance < self.r:
-            return [0,0]
+            result[0] = -math.cos(theta) * 1000
+            result[1] = -math.sin(theta) * 1000
+            return result
         if self.r<=distance<=(self.s + self.r):
-            result[0] = self.alpha * (distance - self.r) * math.cos(theta)
-            result[1] = self.alpha * (distance - self.r) * math.sin(theta)
+            result[0] = -self.alpha * (self.s + self.r - distance) * math.cos(theta)
+            result[1] = -self.alpha * (self.s + self.r - distance) * math.sin(theta)
         elif distance > (self.s + self.r):
-            result[0] = self.alpha * self.s * math.cos(theta)
-            result[1] = self.alpha * self.s * math.sin(theta)
+            result[0] = 0
+            result[1] = 0
         return result
 
 class SpheroIntrudeForm(QtGui.QWidget):

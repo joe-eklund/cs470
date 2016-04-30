@@ -81,7 +81,8 @@ class AttractiveField(Field):
     def calcVelocity(self, msg):
         result = [0,0]
         distance = self.calculateDistance(int(msg.x), self.xpos, int(msg.y), self.ypos)
-        theta = 0-math.atan2(self.ypos - int(msg.y),self.xpos - int(msg.x))
+        theta = math.atan2(self.ypos - int(msg.y),self.xpos - int(msg.x))
+        print math.degrees(theta)
         if distance < self.r:
             return result
         if self.r<=distance<=(self.s + self.r):

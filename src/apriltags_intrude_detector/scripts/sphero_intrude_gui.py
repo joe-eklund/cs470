@@ -42,8 +42,8 @@ class Controller:
                 poly = resp.polygons[i]
                 # The polygon's id (just an integer, 0 is goal, all else is bad)
                 t_id = resp.ids[i]
-                x = 0;
-                y = 0;
+                x = 0.0;
+                y = 0.0;
                 for p in poly.points:
                     x = x + int(p.x)
                     y = y + int(p.y)
@@ -79,17 +79,18 @@ class Field:
 
 class AttractiveField(Field):
     def calcVelocity(self, msg):
-        result = []
+        result = [0,0]
         distance = self.calculateDistance(int(msg.x), self.xpos, int(msg.y), self.ypos)
         theta = math.atan2(self.ypos - int(msg.y),self.xpos - int(msg.x))
         if distance < self.r:
-            return [0,0]
+            return result
         if self.r<=distance<=(self.s + self.r):
-            result.append(self.alpha * (distance - self.r) * math.cos(theta))
-            result.append(self.alpha * (distance - self.r) * math.sin(theta))
+            result[0] = (self.alpha * (distance - self.r) * math.cos(theta))
+            result[1] = (self.alpha * (distance - self.r) * math.sin(theta))
         elif distance > (self.s + self.r):
-            result.append(self.alpha * self.s * math.cos(theta))
-            result.append(self.alpha * self.s * math.sin(theta))
+            result[0] = (self.alpha * self.s * math.cos(theta))
+            result[1] = (self.alpha * self.s * math.sin(theta))
+        print "Delta X, Delta Y: " + ",".join(result)
         return result
 
 class RepulsiveField(Field):

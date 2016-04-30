@@ -60,7 +60,7 @@ class Controller:
                 if t_id == 0:
                     self.fields.append(AttractiveField(x,y,.3,s,r))
                 else:
-                    self.fields.append(RepulsiveField(x,y,.8,r*0.5,r))
+                    self.fields.append(RepulsiveField(x,y,.8,r*1.5,r))
         except Exception, e:
             print "Exception: " + str(e)
         finally:

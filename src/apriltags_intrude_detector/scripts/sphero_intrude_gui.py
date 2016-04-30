@@ -22,10 +22,9 @@ class Controller:
         if not self.stop:
             twist = Twist()
             # Change twist.linear.x to be your desired x velocity
-            if(int(msg.x) <= 523):
-                twist.linear.x = 50.0
-                # Change twist.linear.y to be your desired y velocity
-                twist.linear.y = 50.0
+            twist.linear.x += self.fields[0].calcVelocity(msg)[0]
+            # Change twist.linear.y to be your desired y velocity
+            twist.linear.y += self.fiels[0].calcVelocity(msg)[1]
             twist.linear.z = 0
             twist.angular.x = 0
             twist.angular.y = 0
@@ -53,9 +52,10 @@ class Controller:
                 r = math.sqrt(math.pow(int(poly.points[0].x)-x,2) + math.pow(int(poly.points[0].y)-y,2))
                 s = 2 * r
                 fieldType = False
-                if t_id ==0:
-                    fieldType = True
-                self.fields.append(Field(x,y,.5,s,r,fieldType))
+                if t_id == 0:
+                    self.fields.append(AttractiveField(x,y,.5,s,r))
+                else:
+                    self.fields.append(RepulsiveField(x,y,.5,s,r))
         except Exception, e:
             print "Exception: " + str(e)
         finally:
@@ -63,19 +63,49 @@ class Controller:
 
     def stop(self):
         self.stop = True
-    def calcVelocity(self):
-        result = []
 
-        return result
 
 class Field:
-    def __init__(self, xpos, ypos, alpha, s, r, fieldType):
+    def __init__(self, xpos, ypos, alpha, s, r):
         self.xpos = xpos
         self.ypos = ypos
         self.alpha = alpha
         self.s = s
         self.r = r
-        self.type = fieldType
+
+    def calculateDistance(self,x0,x1,y0,y1):
+        distance = math.sqrt(math.pow(int(x0)-x1,2) + math.pow(int(y0)-y1,2))
+        return distance
+
+class AttractiveField(Field):
+    def calcVelocity(self, msg):
+        result = []
+        distance = self.calculateDistance(int(msg.x), self.xpos, int(msg.y), self.ypos)
+        theta = math.atan2(self.ypos - int(msg.y),self.xpos - int(msg.x))
+        if distance < self.r:
+            return [0,0]
+        if self.r<=distance<=(self.s + self.r):
+            result[0] = self.alpha * (distance - self.r) * math.cos(theta)
+            result[1] = self.alpha * (distance - self.r) * math.sin(theta)
+        elif distance > (self.s + self.r):
+            result[0] = self.alpha * self.s * math.cos(theta)
+            result[1] = self.alpha * self.s * math.sin(theta)
+        return result
+
+class RepulsiveField(Field):
+    def calcVelocity(self, msg):
+        result = []
+        distance = self.calculateDistance(int(msg.x), self.xpos, int(msg.y), self.ypos)
+        theta = math.atan2(self.ypos - int(msg.y),self.xpos - int(msg.x))
+        if distance < self.r:
+            return [0,0]
+        if self.r<=distance<=(self.s + self.r):
+            result[0] = self.alpha * (distance - self.r) * math.cos(theta)
+            result[1] = self.alpha * (distance - self.r) * math.sin(theta)
+        elif distance > (self.s + self.r):
+            result[0] = self.alpha * self.s * math.cos(theta)
+            result[1] = self.alpha * self.s * math.sin(theta)
+        return result
 
 class SpheroIntrudeForm(QtGui.QWidget):
     controller = Controller()

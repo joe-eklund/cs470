@@ -137,7 +137,7 @@ class TangentialField(Field):
             print "outside of s field"
             result[0] = (self.alpha * self.s * math.cos(theta))
             result[1] = (self.alpha * self.s * math.sin(theta))
-        elif math.degrees(theta)<=0 or math.degrees(theta)>=180:
+        elif math.degrees(theta)<=45 or math.degrees(theta)>=135:
             print "inside of s field in tangential area."
             # result[0] = -(self.s + self.r - distance) * math.cos(theta + math.pi/2)
             result[0] = -(distance - self.r) * math.cos(theta + math.pi/2)

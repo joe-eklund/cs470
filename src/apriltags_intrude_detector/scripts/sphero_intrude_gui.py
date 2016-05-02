@@ -70,7 +70,7 @@ class Controller:
                 elif t_id == 1:
                     self.fields.append(TangentialField(t_id,x,y,.6,s,r))
                 else:
-                    self.fields.append(RepulsiveField(t_id,x,y,.5,s,r))
+                    self.fields.append(RepulsiveField(t_id,x,y,.5,2*s,r))
             self.fields.append(RandomField(0,0,0,0,0))
         except Exception, e:
             print "Exception: " + str(e)
@@ -140,8 +140,8 @@ class TangentialField(Field):
             # result[0] = -(self.s + self.r - distance) * math.cos(theta + math.pi/2)
             result[0] = -self.alpha * (distance - self.r) * math.cos(theta + math.pi/2)
             result[1] = -self.alpha * (distance - self.r) * math.sin(theta + math.pi/2)
-            result[0] += (self.alpha/4 * (distance - self.r) * math.cos(theta))
-            result[1] += (self.alpha/4 * (distance - self.r) * math.sin(theta))
+            # result[0] += (self.alpha/4 * (distance - self.r) * math.cos(theta))
+            # result[1] += (self.alpha/4 * (distance - self.r) * math.sin(theta))
         else:
             result[0] = (self.alpha * (distance - self.r) * math.cos(theta))
             result[1] = (self.alpha * (distance - self.r) * math.sin(theta))

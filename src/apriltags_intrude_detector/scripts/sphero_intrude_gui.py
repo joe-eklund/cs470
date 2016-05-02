@@ -63,14 +63,14 @@ class Controller:
                 x = x/len(poly.points)
                 y = y/len(poly.points)
                 r = math.sqrt(math.pow(int(poly.points[0].x)-x,2) + math.pow(int(poly.points[0].y)-y,2))
-                s = 2 * r
+                s = r
                 fieldType = False
                 if t_id == 0:
                     self.fields.append(AttractiveField(t_id,x,y,.3,s,r))
                 elif t_id == 1:
                     self.fields.append(TangentialField(t_id,x,y,.3,s,r))
                 else:
-                    self.fields.append(RepulsiveField(t_id,x,y,.5,r*1.2,r))
+                    self.fields.append(RepulsiveField(t_id,x,y,.5,s,r))
             self.fields.append(RandomField(0,0,0,0,0))
         except Exception, e:
             print "Exception: " + str(e)

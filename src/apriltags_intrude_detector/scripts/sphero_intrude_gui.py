@@ -25,8 +25,13 @@ class Controller:
             deltaX = 0
             deltaY = 0
             for field in self.fields:
-                deltaX += field.calcVelocity(msg)[0]
-                deltaY += field.calcVelocity(msg)[1]
+                if field.id <= 1 and field.calcVelocity(msg)[0] == 0 and field.calcVelocity(msg)[1]==0:
+                    deltaX = 0
+                    deltaY = 0
+                    break
+                else:
+                    deltaX += field.calcVelocity(msg)[0]
+                    deltaY += field.calcVelocity(msg)[1]
             # Change twist.linear.x to be your desired x velocity
             print deltaX
 
@@ -61,11 +66,11 @@ class Controller:
                 s = 2 * r
                 fieldType = False
                 if t_id == 0:
-                    self.fields.append(AttractiveField(x,y,.6,s,r))
+                    self.fields.append(AttractiveField(t_id,x,y,.6,s,r))
                 elif t_id == 1:
-                    self.fields.append(TangentialField(x,y,.6,s,r))
+                    self.fields.append(TangentialField(t_id,x,y,.6,s,r))
                 else:
-                    self.fields.append(RepulsiveField(x,y,.9,r*1.5,r))
+                    self.fields.append(RepulsiveField(t_id,x,y,.9,r*1.5,r))
             self.fields.append(RandomField(0,0,0,0,0))
         except Exception, e:
             print "Exception: " + str(e)
@@ -77,7 +82,8 @@ class Controller:
 
 
 class Field:
-    def __init__(self, xpos, ypos, alpha, s, r):
+    def __init__(self,id, xpos, ypos, alpha, s, r):
+        self.id = id
         self.xpos = xpos
         self.ypos = ypos
         self.alpha = alpha

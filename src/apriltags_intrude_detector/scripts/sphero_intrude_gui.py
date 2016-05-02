@@ -118,7 +118,7 @@ class RepulsiveField(Field):
         elif distance > (self.s + self.r):
             result[0] = 0
             result[1] = 0
-            return result
+        return result
 
 class TangentialField(Field):
     def calcVelocity(self, msg):

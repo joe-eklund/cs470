@@ -66,7 +66,7 @@ class Controller:
                 s = r
                 fieldType = False
                 if t_id == 0:
-                    self.fields.append(AttractiveField(t_id,x,y,.3,s,r))
+                    self.fields.append(AttractiveField(t_id,x,y,.6,s,r))
                 elif t_id == 1:
                     self.fields.append(TangentialField(t_id,x,y,.3,s,r))
                 else:

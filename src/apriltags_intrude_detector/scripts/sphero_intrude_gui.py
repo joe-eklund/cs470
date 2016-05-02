@@ -66,7 +66,7 @@ class Controller:
                     self.fields.append(TangentialField(x,y,.3,s,r))
                 else:
                     self.fields.append(RepulsiveField(x,y,.8,r*1.5,r))
-            self.fields.append(RandomField(0,0,0,0,0))
+            # self.fields.append(RandomField(0,0,0,0,0))
         except Exception, e:
             print "Exception: " + str(e)
         finally:
@@ -142,9 +142,10 @@ class TangentialField(Field):
 
 class RandomField(Field):
     def calcVelocity(self,msg):
-        deltaX = random.randint(-5,5)
-        deltaY = random.randint(-5,5)
-        return [deltaX, deltaY]
+        result = [0,0]
+        result[0] = random.randint(-5,5)
+        result[1] = random.randint(-5,5)
+        return result
 
 class SpheroIntrudeForm(QtGui.QWidget):
     controller = Controller()

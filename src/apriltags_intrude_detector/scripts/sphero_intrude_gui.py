@@ -70,7 +70,7 @@ class Controller:
                 elif t_id == 1:
                     self.fields.append(TangentialField(t_id,x,y,.6,s,r))
                 else:
-                    self.fields.append(RepulsiveField(t_id,x,y,.5,2*s,r))
+                    self.fields.append(RepulsiveField(t_id,x,y,.5,4*s,r))
             self.fields.append(RandomField(0,0,0,0,0))
         except Exception, e:
             print "Exception: " + str(e)

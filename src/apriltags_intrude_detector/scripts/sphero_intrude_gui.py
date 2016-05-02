@@ -68,7 +68,7 @@ class Controller:
                 if t_id == 0:
                     self.fields.append(AttractiveField(t_id,x,y,.6,s,r))
                 elif t_id == 1:
-                    self.fields.append(TangentialField(t_id,x,y,.6,2*s,r))
+                    self.fields.append(TangentialField(t_id,x,y,.3,2*s,r))
                 else:
                     self.fields.append(RepulsiveField(t_id,x,y,.5,s,r))
             self.fields.append(RandomField(0,0,0,0,0))

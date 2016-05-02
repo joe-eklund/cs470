@@ -140,8 +140,8 @@ class TangentialField(Field):
             # result[0] = -(self.s + self.r - distance) * math.cos(theta + math.pi/2)
             result[0] = -(distance - self.r) * math.cos(theta + math.pi/2)
             result[1] = -(distance - self.r) * math.sin(theta + math.pi/2)
-            result[0] += (self.alpha/4 * (distance - self.r) * math.cos(theta))
-            result[1] += (self.alpha/4 * (distance - self.r) * math.sin(theta))
+            # result[0] += (self.alpha/4 * (distance - self.r) * math.cos(theta))
+            # result[1] += (self.alpha/4 * (distance - self.r) * math.sin(theta))
         else:
             result[0] = (self.alpha * (distance - self.r) * math.cos(theta))
             result[1] = (self.alpha * (distance - self.r) * math.sin(theta))

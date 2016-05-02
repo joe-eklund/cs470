@@ -66,11 +66,11 @@ class Controller:
                 s = 2 * r
                 fieldType = False
                 if t_id == 0:
-                    self.fields.append(AttractiveField(t_id,x,y,.6,s,r))
+                    self.fields.append(AttractiveField(t_id,x,y,.3,s,r))
                 elif t_id == 1:
-                    self.fields.append(TangentialField(t_id,x,y,.6,s,r))
+                    self.fields.append(TangentialField(t_id,x,y,.3,s,r))
                 else:
-                    self.fields.append(RepulsiveField(t_id,x,y,.9,r*1.5,r))
+                    self.fields.append(RepulsiveField(t_id,x,y,.5,r*1.2,r))
             self.fields.append(RandomField(0,0,0,0,0))
         except Exception, e:
             print "Exception: " + str(e)
@@ -136,10 +136,10 @@ class TangentialField(Field):
         elif distance > (self.s + self.r):
             result[0] = (self.alpha * self.s * math.cos(theta))
             result[1] = (self.alpha * self.s * math.sin(theta))
-        elif math.degrees(theta)<=60 or math.degrees(theta)>=120:
+        elif math.degrees(theta)<=0 or math.degrees(theta)>=180:
             # result[0] = -(self.s + self.r - distance) * math.cos(theta + math.pi/2)
-            result[0] = -(distance - self.r) * math.cos(theta + math.pi/2)
-            result[1] = -(distance - self.r) * math.sin(theta + math.pi/2)
+            result[0] = -self.alpha * (distance - self.r) * math.cos(theta + math.pi/2)
+            result[1] = -self.alpha * (distance - self.r) * math.sin(theta + math.pi/2)
             result[0] += (self.alpha/4 * (distance - self.r) * math.cos(theta))
             result[1] += (self.alpha/4 * (distance - self.r) * math.sin(theta))
         else:

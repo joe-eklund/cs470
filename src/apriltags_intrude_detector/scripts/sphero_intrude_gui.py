@@ -12,7 +12,8 @@ import random
 # You implement this class
 class Controller:
     stop = True # This is set to true when the stop button is pressed
-
+    X = 800
+    Y = 600
     def __init__(self):
         self.cmdVelPub = rospy.Publisher('cmd_vel', Twist, queue_size=1)
         self.trackposSub = rospy.Subscriber("tracked_pos", Pose2D, self.trackposCallback)

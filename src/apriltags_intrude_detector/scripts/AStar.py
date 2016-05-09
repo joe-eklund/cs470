@@ -2,9 +2,6 @@
 
 from enum import Enum
 
-from src.apriltags_intrude_detector.scripts.sphero_intrude_gui import Field
-
-
 class Grid:
     def __init__(self,x,y,polygons):
         self.x = x
@@ -39,7 +36,8 @@ class Grid:
                                     self.nodes[i][j].addNeighbor(self.nodes[i-1][j+1])
                                     self.nodes[i-1][j+1].addNeighbor(self.nodes[i][j])
 
-
+    def aStar(self):
+        return
 
 class Node:
 

@@ -40,6 +40,7 @@ class Grid:
                                     self.nodes[i-1][j+1].addNeighbor(self.nodes[i][j])
 
 
+
 class Node:
 
     def __init__(self,points):

@@ -10,6 +10,9 @@ import random
 
 
 # You implement this class
+from src.apriltags_intrude_detector.scripts.AStar import Grid
+
+
 class Controller:
     stop = True # This is set to true when the stop button is pressed
     X = 800
@@ -17,7 +20,7 @@ class Controller:
     def __init__(self):
         self.cmdVelPub = rospy.Publisher('cmd_vel', Twist, queue_size=1)
         self.trackposSub = rospy.Subscriber("tracked_pos", Pose2D, self.trackposCallback)
-        self.fields = []
+        self.Grid = None
 
     def trackposCallback(self, msg):
         # This function is continuously called
@@ -25,17 +28,8 @@ class Controller:
             twist = Twist()
             deltaX = 0
             deltaY = 0
-            for field in self.fields:
-                if field.id <= 1 and field.calcVelocity(msg)[0] == 0 and field.calcVelocity(msg)[1]==0:
-                    deltaX = 0
-                    deltaY = 0
-                    break
-                else:
-                    deltaX += field.calcVelocity(msg)[0]
-                    deltaY += field.calcVelocity(msg)[1]
-            # Change twist.linear.x to be your desired x velocity
-            print deltaX
 
+            # Change twist.linear.x to be your desired x velocity
             twist.linear.x = deltaX
             # Change twist.linear.y to be your desired y velocity
             twist.linear.y = deltaY
@@ -50,29 +44,9 @@ class Controller:
         try:
             info_query = rospy.ServiceProxy("apriltags_info", apriltags_info)
             resp = info_query()
+            # Creates a 40 x 30 grid
+            self.grid = Grid(self.X/20,self.Y/20,resp.polygons)
 
-            for i in range(len(resp.polygons)):
-                # A polygon (access points using poly.points)
-                poly = resp.polygons[i]
-                # The polygon's id (just an integer, 0 is goal, all else is bad)
-                t_id = resp.ids[i]
-                x = 0.0;
-                y = 0.0;
-                for p in poly.points:
-                    x = x + int(p.x)
-                    y = y + int(p.y)
-                x = x/len(poly.points)
-                y = y/len(poly.points)
-                r = math.sqrt(math.pow(int(poly.points[0].x)-x,2) + math.pow(int(poly.points[0].y)-y,2))
-                s = r
-                fieldType = False
-                if t_id == 0:
-                    self.fields.append(AttractiveField(t_id,x,y,.6,s,r))
-                elif t_id == 1:
-                    self.fields.append(TangentialField(t_id,x,y,.3,2*s,r))
-                else:
-                    self.fields.append(RepulsiveField(t_id,x,y,.5,s,r))
-            self.fields.append(RandomField(0,0,0,0,0))
         except Exception, e:
             print "Exception: " + str(e)
         finally:

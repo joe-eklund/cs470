@@ -11,9 +11,16 @@ class Tree:
         self.vertices.append(vertex)
     def create(self,goal):
         delta = 10
-        rand_vertex = self.generateVertex()
-        nearest = self.getNearest(rand_vertex)
-        new_vertex = self.getNew(nearest,rand_vertex,delta)
+        stop = False;
+        while not stop:
+            rand_vertex = self.generateVertex()
+            nearest = self.getNearest(rand_vertex)
+            new_vertex = self.getNew(nearest,rand_vertex,delta)
+            if goal.distance(new_vertex) < delta:
+                stop = True;
+            self.addVertex(new_vertex)
+            self.addEdge(Edge(nearest,new_vertex))
+
     def addVertex(self, vertex):
         self.vertices.append(vertex)
     def addEdge(self, edge):
@@ -43,3 +50,8 @@ class Vertex:
 
     def distance(self,vertex):
         return math.sqrt(math.pow(vertex.x - self.x,2) + math.pow(vertex.y - self.y,2))
+
+class Edge
+    def __init__(self,vertex1,vertex2):
+        self.vertex1 = vertex1
+        self.vertex2 = vertex2

@@ -19,6 +19,7 @@ class PriorityQueue:
 
 class Grid:
     def __init__(self,x,y,polygons):
+        self.start = None
         self.x = x
         self.y = y
         self.nodes = [[None for i in range(self.x)] for j in range(self.y)]
@@ -84,6 +85,11 @@ class Grid:
                     came_from[next] = current
 
         return came_from, cost_so_far
+
+    def find(self,x,y):
+        xcoord = math.floor(x/20)
+        ycoord = math.floor(y/20)
+        return self.nodes[xcoord][ycoord]
 
 class Node:
 

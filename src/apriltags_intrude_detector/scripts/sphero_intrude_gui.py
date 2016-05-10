@@ -21,13 +21,20 @@ class Controller:
         self.cmdVelPub = rospy.Publisher('cmd_vel', Twist, queue_size=1)
         self.trackposSub = rospy.Subscriber("tracked_pos", Pose2D, self.trackposCallback)
         self.Grid = None
+        self.goal = None
 
     def trackposCallback(self, msg):
         # This function is continuously called
         if not self.stop:
             twist = Twist()
-            deltaX = 0
-            deltaY = 0
+            current = self.grid.find(msg.x,msg.y)
+            path,cost = self.grid.a_star(current,self.goal)
+            next = self.goal
+            while path[next] is not current:
+                next = path[next]
+            field = AttractiveField(0,next.getCenterX(),next.getCenterY(),next.distance(current),next.distance(current),next.distance(current))
+            deltaX = field.calcVelocity(msg)[0]
+            deltaY = field.calcVelocity(msg)[1]
 
             # Change twist.linear.x to be your desired x velocity
             twist.linear.x = deltaX
@@ -44,8 +51,22 @@ class Controller:
         try:
             info_query = rospy.ServiceProxy("apriltags_info", apriltags_info)
             resp = info_query()
+            self.grid = Grid(self.X / 20, self.Y / 20, resp.polygons)
+            for i in range(len(resp.polygons)):
+                poly = resp.polygons[i]
+                # The polygon's id (just an integer, 0 is goal, all else is bad)
+                t_id = resp.ids[i]
+                if t_id == 0:
+                    x = 0
+                    y = 0
+                    for p in poly.points:
+                        x = x + int(p.x)
+                        y = y + int(p.y)
+                    x = x / len(poly.points)
+                    y = y / len(poly.points)
+                    self.goal = self.grid.find(x,y)
             # Creates a 40 x 30 grid
-            self.grid = Grid(self.X/20,self.Y/20,resp.polygons)
+
 
         except Exception, e:
             print "Exception: " + str(e)

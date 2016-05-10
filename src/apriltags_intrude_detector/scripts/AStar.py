@@ -1,6 +1,21 @@
 #!/usr/bin/python
 
 from enum import Enum
+import heapq
+import math
+
+class PriorityQueue:
+    def __init__(self):
+        self.elements = []
+
+    def empty(self):
+        return len(self.elements) == 0
+
+    def put(self, item, priority):
+        heapq.heappush(self.elements, (priority, item))
+
+    def get(self):
+        return heapq.heappop(self.elements)[1]
 
 class Grid:
     def __init__(self,x,y,polygons):
@@ -31,17 +46,50 @@ class Grid:
                             if(self.nodes[i-1][j-1].getOverlaps() == False):
                                 self.nodes[i][j].addNeighbor(self.nodes[i-1][j-1])
                                 self.nodes[i-1][j-1].addNeighbor(self.nodes[i][j])
-                            if j < self.y:
+                            if j < self.y - 1:
                                 if self.nodes[i-1][j+1].getOverlaps() == False:
                                     self.nodes[i][j].addNeighbor(self.nodes[i-1][j+1])
                                     self.nodes[i-1][j+1].addNeighbor(self.nodes[i][j])
 
-    def aStar(self):
-        return
+    def heuristic(self, a, b):
+        (x1, y1) = a.getCenterX(), a.getCenterY()
+        (x2, y2) = b.getCenterX(), b.getCenterY()
+        return abs(x1 - x2) + abs(y1 - y2)
+
+    def cost(self, current, next):
+        (x1, y1) = current.getCenterX(), current.getCenterY()
+        (x2, y2) = next.getCenterX(), next.getCenterY()
+        return math.sqrt(math.pow(x2 - x1, 2) + math.pow(y2 - y1, 2));
+
+    def a_star(self, start, goal):
+        frontier = PriorityQueue()
+        frontier.put(start, 0)
+        came_from = {}
+        cost_so_far = {}
+        came_from[start] = None
+        cost_so_far[start] = 0
+
+        while not frontier.empty():
+            current = frontier.get()
+
+            if current == goal:
+                break
+
+            for next in current.getNeighbors():
+                new_cost = cost_so_far[current] + self.cost(current, next)
+                if next not in cost_so_far or new_cost < cost_so_far[next]:
+                    cost_so_far[next] = new_cost
+                    priority = new_cost + self.heuristic(goal, next)
+                    frontier.put(next, priority)
+                    came_from[next] = current
+
+        return came_from, cost_so_far
 
 class Node:
 
     def __init__(self,points):
+        self.centerX = 0
+        self.centerY = 0
         self.points = points
         for point in points:
             self.centerX += point[0]
@@ -50,6 +98,9 @@ class Node:
         self.centerY = self.centerY/len(points)
         self.neighbors = []
         self.overlaps = False
+
+    def __lt__(self, other):
+        return True
 
     def addNeighbor(self,neighbor):
         self.neighbors.append(neighbor)
@@ -74,6 +125,13 @@ class Node:
 
     def getOverlaps(self):
         return self.overlaps
+
+    def getCenterX(self):
+        return self.centerX
+
+    def getCenterY(self):
+        return self.centerY
+
     def maxX(self):
         max = 0
         for point in self.points:
@@ -132,3 +190,7 @@ class DIR(Enum):
     SW = -45
     W = 0
     NW = 45
+
+if __name__ == '__main__':
+    grid = Grid(100, 100, [])
+    grid.a_star(grid.nodes[0][50], grid.nodes[50][60])

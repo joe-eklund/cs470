@@ -20,8 +20,8 @@ class Controller:
     def __init__(self):
         self.cmdVelPub = rospy.Publisher('cmd_vel', Twist, queue_size=1)
         self.trackposSub = rospy.Subscriber("tracked_pos", Pose2D, self.trackposCallback)
-        self.grid = None
-        self.goal = None
+        # self.grid = None
+        # self.goal = None
 
     def trackposCallback(self, msg):
         # This function is continuously called

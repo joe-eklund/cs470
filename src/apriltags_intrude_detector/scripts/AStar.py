@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from enum import Enum
+# from enum import Enum
 import heapq
 import math
 
@@ -187,15 +187,15 @@ class Node:
             if point.y < min:
                 min = point.y
         return min
-class DIR(Enum):
-    N = 90
-    NE = 135
-    E = 180
-    SE = -135
-    S = -90
-    SW = -45
-    W = 0
-    NW = 45
+# class DIR(Enum):
+#     N = 90
+#     NE = 135
+#     E = 180
+#     SE = -135
+#     S = -90
+#     SW = -45
+#     W = 0
+#     NW = 45
 
 if __name__ == '__main__':
     grid = Grid(100, 100, [])

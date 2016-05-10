@@ -193,4 +193,16 @@ class DIR(Enum):
 
 if __name__ == '__main__':
     grid = Grid(100, 100, [])
-    grid.a_star(grid.nodes[0][50], grid.nodes[50][60])
+    start = grid.nodes[0][50]
+    end = grid.nodes[50][60]
+    path, cost = grid.a_star(start, end)
+
+    x = 1
+    i = end
+    print("Node " + str(x) + ": Center X: " + str(path[i].getCenterX()) + " Center Y: " + str(path[i].getCenterY()))
+    while path[i] != None:
+        x += 1
+        print("Length: " + str(cost[i]))
+        print("Node " + str(x) + ": Center X: " + str(path[i].getCenterX()) + " Center Y: " + str(path[i].getCenterY()))
+        i = path[i]
+    print("Total Nodes in Path: " + str(x))

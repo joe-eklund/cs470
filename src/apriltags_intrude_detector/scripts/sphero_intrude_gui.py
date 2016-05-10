@@ -10,7 +10,7 @@ import random
 
 
 # You implement this class
-from src.apriltags_intrude_detector.scripts.AStar import Grid
+from AStar import Grid
 
 
 class Controller:

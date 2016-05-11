@@ -60,21 +60,22 @@ class Controller:
         try:
             info_query = rospy.ServiceProxy("apriltags_info", apriltags_info)
             resp = info_query()
+            x = 0
+            y = 0
             for i in range(len(resp.polygons)):
                 poly = resp.polygons[i]
                 # The polygon's id (just an integer, 0 is goal, all else is bad)
                 t_id = resp.ids[i]
                 if t_id == 0:
-                    x = 0
-                    y = 0
                     for p in poly.points:
                         x = x + int(p.x)
                         y = y + int(p.y)
                     x = x / len(poly.points)
                     y = y / len(poly.points)
-                    self.goal = self.grid.find(x,y)
+
                     resp.polygons.pop(i)
             self.grid = Grid(40, 30, resp.polygons)
+            self.goal = self.grid.find(x,y)
             print self.grid.toString()
 
             # Creates a 30 x 40 grid

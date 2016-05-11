@@ -94,6 +94,8 @@ class Grid:
                 break
             print str(current.getNeighbors())
             for next in current.getNeighbors():
+                if next == 0:
+                    continue
                 new_cost = cost_so_far[current] + self.cost(current, next)
                 if next not in cost_so_far or new_cost < cost_so_far[next]:
                     cost_so_far[next] = new_cost

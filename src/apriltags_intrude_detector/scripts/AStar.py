@@ -61,7 +61,10 @@ class Grid:
         node_line = ""
         for i in range(self.x):
             for j in range(self.y):
-                node_line = node_line + str(self.nodes[i][j].getOverlaps())[0] + " "
+                if str(self.nodes[i][j].getOverlaps())[0] == "T":
+                    node_line = node_line + "X" + " "
+                else:
+                    node_line = node_line + "O" + " "
             node_line = node_line + "\n"
         return node_line
 

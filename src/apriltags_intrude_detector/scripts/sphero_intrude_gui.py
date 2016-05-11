@@ -61,7 +61,7 @@ class Controller:
             info_query = rospy.ServiceProxy("apriltags_info", apriltags_info)
             resp = info_query()
             self.grid = Grid(40, 30, resp.polygons)
-            # print self.grid.toString()
+            print self.grid.toString()
             for i in range(len(resp.polygons)):
                 poly = resp.polygons[i]
                 # The polygon's id (just an integer, 0 is goal, all else is bad)

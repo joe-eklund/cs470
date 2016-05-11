@@ -20,7 +20,7 @@ class Controller:
     def __init__(self):
         self.cmdVelPub = rospy.Publisher('cmd_vel', Twist, queue_size=1)
         self.trackposSub = rospy.Subscriber("tracked_pos", Pose2D, self.trackposCallback)
-        self.grid = Grid(30,40, [])
+        self.grid = Grid(40,30, [])
         # self.grid = None
         # self.goal = None
 	self.goal = Node([])
@@ -60,7 +60,7 @@ class Controller:
         try:
             info_query = rospy.ServiceProxy("apriltags_info", apriltags_info)
             resp = info_query()
-            self.grid = Grid(30, 40, resp.polygons)
+            self.grid = Grid(40, 30, resp.polygons)
             print self.grid.toString()
             for i in range(len(resp.polygons)):
                 poly = resp.polygons[i]

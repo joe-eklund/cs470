@@ -43,7 +43,7 @@ class Grid:
                         if j > 0:
                             if(self.nodes[i][j-1].getOverlaps() == False):
                                 self.nodes[i][j-1].addNeighbor(self.nodes[i][j])
-                                self.nodes[i][j].addNeighbor(self.nodes[i-1][j])
+                                self.nodes[i][j].addNeighbor(self.nodes[i][j-1])
                             if(self.nodes[i-1][j-1].getOverlaps() == False):
                                 self.nodes[i][j].addNeighbor(self.nodes[i-1][j-1])
                                 self.nodes[i-1][j-1].addNeighbor(self.nodes[i][j])
@@ -55,7 +55,7 @@ class Grid:
                         if j>0:
                             if(self.nodes[i][j-1].getOverlaps() == False):
                                 self.nodes[i][j-1].addNeighbor(self.nodes[i][j])
-                                self.nodes[i][j].addNeighbor(self.nodes[i-1][j])
+                                self.nodes[i][j].addNeighbor(self.nodes[i][j-1])
 
     def toString(self):
         node_line = ""
@@ -92,7 +92,7 @@ class Grid:
             if current == goal:
                 print "Found goal"
                 break
-            # print str(current.getNeighbors())
+            print str(current.getNeighbors())
             for next in current.getNeighbors():
                 new_cost = cost_so_far[current] + self.cost(current, next)
                 if next not in cost_so_far or new_cost < cost_so_far[next]:
@@ -130,7 +130,6 @@ class Node:
         return True
 
     def addNeighbor(self,neighbor):
-        if neighbor != 0:
             self.neighbors.append(neighbor)
 
     def getNeighbors(self):

@@ -22,11 +22,11 @@ class Grid:
         #self.start = None
         self.x = x
         self.y = y
-        self.nodes = [[None for i in range(self.y)] for j in range(self.x)]
-        for i in range(self.x):
-            for j in range(self.y):
-                pointX = i*20
-                pointY = j*20
+        self.nodes = [[0 for a in range(self.x)] for a in range(self.y)]
+        for i in range(self.y):
+            for j in range(self.x):
+                pointY = i*20
+                pointX = j*20
                 points = [[pointX,pointY],
                           [pointX,pointY+20],
                           [pointX+20,pointY],
@@ -43,7 +43,7 @@ class Grid:
                         if j > 0:
                             if(self.nodes[i][j-1].getOverlaps() == False):
                                 self.nodes[i][j-1].addNeighbor(self.nodes[i][j])
-                                self.nodes[i][j].addNeighbor(self.nodes[i-1][j])
+                                self.nodes[i][j].addNeighbor(self.nodes[i][j-1])
                             if(self.nodes[i-1][j-1].getOverlaps() == False):
                                 self.nodes[i][j].addNeighbor(self.nodes[i-1][j-1])
                                 self.nodes[i-1][j-1].addNeighbor(self.nodes[i][j])
@@ -51,6 +51,22 @@ class Grid:
                                 if self.nodes[i-1][j+1].getOverlaps() == False:
                                     self.nodes[i][j].addNeighbor(self.nodes[i-1][j+1])
                                     self.nodes[i-1][j+1].addNeighbor(self.nodes[i][j])
+                    else:
+                        if j>0:
+                            if(self.nodes[i][j-1].getOverlaps() == False):
+                                self.nodes[i][j-1].addNeighbor(self.nodes[i][j])
+                                self.nodes[i][j].addNeighbor(self.nodes[i][j-1])
+
+    def toString(self):
+        node_line = ""
+        for i in range(self.y):
+            for j in range(self.x):
+                if str(self.nodes[i][j].getOverlaps())[0] == "T":
+                    node_line = node_line + "X" + " "
+                else:
+                    node_line = node_line + "O" + " "
+            node_line = node_line + "\n"
+        return node_line
 
     def heuristic(self, a, b):
         (x1, y1) = a.getCenterX(), a.getCenterY()
@@ -76,7 +92,7 @@ class Grid:
             if current == goal:
                 print "Found goal"
                 break
-
+            # print str(current.getNeighbors())
             for next in current.getNeighbors():
                 new_cost = cost_so_far[current] + self.cost(current, next)
                 if next not in cost_so_far or new_cost < cost_so_far[next]:
@@ -91,7 +107,7 @@ class Grid:
     def find(self,x,y):
         xcoord = math.floor(x/20)
         ycoord = math.floor(y/20)
-        return self.nodes[int(xcoord)][int(ycoord)]
+        return self.nodes[int(ycoord)][int(xcoord)]
 
 class Node:
 
@@ -114,7 +130,7 @@ class Node:
         return True
 
     def addNeighbor(self,neighbor):
-        self.neighbors.append(neighbor)
+            self.neighbors.append(neighbor)
 
     def getNeighbors(self):
         return self.neighbors

@@ -33,12 +33,12 @@ class Controller:
             next = self.goal
             path, cost = self.grid.a_star(current,next)
             print current.getCenterX()
-	    print current.getCenterY()
-	    print self.goal.getCenterX()
+            print current.getCenterY()
+            print self.goal.getCenterX()
             print self.goal.getCenterY()
             i = next
             if next not in path:
-		print "Is not in path"
+            print "Is not in path"
             while path[i] != None:
                 i = path[i]
             field = AttractiveField(0,next.getCenterX(),next.getCenterY(),next.distance(current),next.distance(current),next.distance(current))
@@ -61,7 +61,7 @@ class Controller:
             info_query = rospy.ServiceProxy("apriltags_info", apriltags_info)
             resp = info_query()
             self.grid = Grid(40, 30, resp.polygons)
-            print self.grid.toString()
+            # print self.grid.toString()
             for i in range(len(resp.polygons)):
                 poly = resp.polygons[i]
                 # The polygon's id (just an integer, 0 is goal, all else is bad)

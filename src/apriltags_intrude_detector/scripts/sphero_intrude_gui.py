@@ -30,10 +30,17 @@ class Controller:
         if not self.stop:
             twist = Twist()
             current = self.grid.find(int(msg.x),int(msg.y))
-            path,cost = self.grid.a_star(current,self.goal)
             next = self.goal
-            while path[next] is not current:
-                next = path[next]
+            path, cost = self.grid.a_star(current,next)
+            print current.getCenterX()
+	    print current.getCenterY()
+	    print self.goal.getCenterX()
+            print self.goal.getCenterY()
+            i = next
+            if next not in path:
+		print "Is not in path"
+            while path[i] != None:
+                i = path[i]
             field = AttractiveField(0,next.getCenterX(),next.getCenterY(),next.distance(current),next.distance(current),next.distance(current))
             deltaX = field.calcVelocity(msg)[0]
             deltaY = field.calcVelocity(msg)[1]
@@ -51,20 +58,15 @@ class Controller:
     def start(self):
         rospy.wait_for_service("apriltags_info")
         try:
-            print "#####GET HERE WOO1####"
             info_query = rospy.ServiceProxy("apriltags_info", apriltags_info)
-            print "#####GET HERE WOO1####"
             resp = info_query()
-            print "length of polygons: " + str(len(resp.polygons))
             self.grid = Grid(40, 30, resp.polygons)
-
+            print self.grid.toString()
             for i in range(len(resp.polygons)):
-                print "#####GET HERE WOO2####"
                 poly = resp.polygons[i]
                 # The polygon's id (just an integer, 0 is goal, all else is bad)
                 t_id = resp.ids[i]
                 if t_id == 0:
-                    print "#####GET HERE WOO3####"
                     x = 0
                     y = 0
                     for p in poly.points:
@@ -73,7 +75,6 @@ class Controller:
                     x = x / len(poly.points)
                     y = y / len(poly.points)
                     self.goal = self.grid.find(x,y)
-                    print "#####GET HERE WOO####"
             # Creates a 40 x 30 grid
 
 

@@ -25,7 +25,6 @@ class Grid:
         self.nodes = [[None for i in range(self.y)] for j in range(self.x)]
         for i in range(self.x):
             for j in range(self.y):
-                print 'setting x and y'
                 pointX = i*20
                 pointY = j*20
                 points = [[pointX,pointY],
@@ -35,9 +34,7 @@ class Grid:
                 self.nodes[i][j] = Node(points)
                 for poly in polygons:
                     if self.nodes[i][j].overlaps(poly):
-                        print 'before check statement'
                         self.nodes[i][j].setOverlaps(True)
-                    print 'after if statement'
                 if self.nodes[i][j].getOverlaps()==False:
                     if i > 0:
                         if self.nodes[i-1][j].getOverlaps() == False:
@@ -77,6 +74,7 @@ class Grid:
             current = frontier.get()
 
             if current == goal:
+                print "Found goal"
                 break
 
             for next in current.getNeighbors():
@@ -86,6 +84,7 @@ class Grid:
                     priority = new_cost + self.heuristic(goal, next)
                     frontier.put(next, priority)
                     came_from[next] = current
+                        
 
         return came_from, cost_so_far
 
@@ -121,14 +120,14 @@ class Node:
         return self.neighbors
 
     def overlaps(self,poly):
-        if self.maxX() < self.minX(poly):
+        if self.maxX() < self.minPolyX(poly):
             return False
-        elif self.minX() > self.maxX(poly):
+        elif self.minX() > self.maxPolyX(poly):
             return False
 
-        if self.maxY() < self.minY(poly):
+        if self.maxY() < self.minPolyY(poly):
             return False
-        elif self.minY() > self.maxX(poly):
+        elif self.minY() > self.maxPolyX(poly):
             return False
         return True
 
@@ -169,25 +168,25 @@ class Node:
                 min = point[1]
         return min
 
-    def maxX(self, poly):
+    def maxPolyX(self, poly):
         max = 0
         for point in poly.points:
             if point.x > max:
                 max = point.x
         return max
-    def minX(self,poly):
+    def minPolyX(self, poly):
         min = 900
         for point in poly.points:
             if point.x < min:
                 min = point.x
         return min
-    def maxY(self,poly):
+    def maxPolyY(self, poly):
         max = 0
         for point in poly.points:
             if point.y > max:
                 max = point.y
         return max
-    def minY(self,poly):
+    def minPolyY(self, poly):
         min = 700
         for point in poly.points:
             if point.y < min:

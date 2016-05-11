@@ -25,7 +25,6 @@ class Grid:
         self.nodes = [[None for i in range(self.y)] for j in range(self.x)]
         for i in range(self.x):
             for j in range(self.y):
-                print 'setting x and y'
                 pointX = i*20
                 pointY = j*20
                 points = [[pointX,pointY],
@@ -35,9 +34,7 @@ class Grid:
                 self.nodes[i][j] = Node(points)
                 for poly in polygons:
                     if self.nodes[i][j].overlaps(poly):
-                        print 'before check statement'
                         self.nodes[i][j].setOverlaps(True)
-                    print 'after if statement'
                 if self.nodes[i][j].getOverlaps()==False:
                     if i > 0:
                         if self.nodes[i-1][j].getOverlaps() == False:
@@ -54,6 +51,14 @@ class Grid:
                                 if self.nodes[i-1][j+1].getOverlaps() == False:
                                     self.nodes[i][j].addNeighbor(self.nodes[i-1][j+1])
                                     self.nodes[i-1][j+1].addNeighbor(self.nodes[i][j])
+
+    def toString(self):
+        node_line = ""
+        for i in range(self.x):
+            for j in range(self.y):
+                node_line = node_line + str(self.nodes[i][j].getCenterX()) + ","+str(self.nodes[i][j].getCenterY()) + " "
+            node_line = node_line + "\n"
+        return node_line
 
     def heuristic(self, a, b):
         (x1, y1) = a.getCenterX(), a.getCenterY()
@@ -77,6 +82,7 @@ class Grid:
             current = frontier.get()
 
             if current == goal:
+                print "Found goal"
                 break
 
             for next in current.getNeighbors():
@@ -86,6 +92,7 @@ class Grid:
                     priority = new_cost + self.heuristic(goal, next)
                     frontier.put(next, priority)
                     came_from[next] = current
+                        
 
         return came_from, cost_so_far
 

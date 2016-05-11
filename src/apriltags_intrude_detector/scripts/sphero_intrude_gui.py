@@ -56,7 +56,14 @@ class Controller:
                 # The polygon's id (just an integer, 0 is goal, all else is bad)
                 t_id = resp.ids[i]
                 if t_id == 0:
-                    self.goal = Obstacle(poly.points)
+                    x = 0
+                    y = 0
+                    for point in poly.points:
+                        x = x + point.x
+                        y = y + point.y
+                    x = x/len(poly.points)
+                    y = y/len(poly.points)
+                    self.goal = Vertex(x,y)
                 else:
                     self.obstacles.append(Obstacle(poly.points))
 

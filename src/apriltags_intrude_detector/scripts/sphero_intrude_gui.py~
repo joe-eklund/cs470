@@ -55,9 +55,9 @@ class Controller:
             info_query = rospy.ServiceProxy("apriltags_info", apriltags_info)
             print "#####GET HERE WOO1####"
             resp = info_query()
-            print "length of polygons: " + str(len(resp.polygons))
+            print "#####GET HERE WOO1####"
             self.grid = Grid(40, 30, resp.polygons)
-
+            print "length of polygons: " + str(len(resp.polygons))
             for i in range(len(resp.polygons)):
                 print "#####GET HERE WOO2####"
                 poly = resp.polygons[i]

@@ -51,12 +51,17 @@ class Grid:
                                 if self.nodes[i-1][j+1].getOverlaps() == False:
                                     self.nodes[i][j].addNeighbor(self.nodes[i-1][j+1])
                                     self.nodes[i-1][j+1].addNeighbor(self.nodes[i][j])
+                    else:
+                        if j>0:
+                            if(self.nodes[i][j-1].getOverlaps() == False):
+                                self.nodes[i][j-1].addNeighbor(self.nodes[i][j])
+                                self.nodes[i][j].addNeighbor(self.nodes[i-1][j])
 
     def toString(self):
         node_line = ""
         for i in range(self.x):
             for j in range(self.y):
-                node_line = node_line + str(self.nodes[i][j].getCenterX()) + ","+str(self.nodes[i][j].getCenterY()) + " "
+                node_line = node_line + str(self.nodes[i][j].getOverlaps()) + " "
             node_line = node_line + "\n"
         return node_line
 

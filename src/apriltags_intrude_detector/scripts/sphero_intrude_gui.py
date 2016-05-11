@@ -38,7 +38,7 @@ class Controller:
             print self.goal.getCenterY()
             i = next
             if next not in path:
-            print "Is not in path"
+                print "Is not in path"
             while path[i] != None:
                 i = path[i]
             field = AttractiveField(0,next.getCenterX(),next.getCenterY(),next.distance(current),next.distance(current),next.distance(current))

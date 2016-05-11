@@ -7,6 +7,7 @@ from std_msgs.msg import ColorRGBA, Float32, Bool
 from apriltags_intrude_detector.srv import apriltags_intrude
 from apriltags_intrude_detector.srv import apriltags_info
 import random
+import traceback
 from AStar import Node
 
 # You implement this class
@@ -17,6 +18,7 @@ class Controller:
     stop = True # This is set to true when the stop button is pressed
     X = 800
     Y = 600
+    
     def __init__(self):
         self.cmdVelPub = rospy.Publisher('cmd_vel', Twist, queue_size=1)
         self.trackposSub = rospy.Subscriber("tracked_pos", Pose2D, self.trackposCallback)
@@ -24,36 +26,42 @@ class Controller:
         # self.grid = None
         # self.goal = None
 	self.goal = Node([])
+        self.debug = True
 
     def trackposCallback(self, msg):
         # This function is continuously called
         if not self.stop:
             twist = Twist()
             current = self.grid.find(int(msg.x),int(msg.y))
-            next = self.goal
-            path, cost = self.grid.a_star(current,next)
-            print current.getCenterX()
-            print current.getCenterY()
-            print self.goal.getCenterX()
-            print self.goal.getCenterY()
-            i = next
-            if next not in path:
-                print "Is not in path"
-            while path[i] != None:
-                i = path[i]
-            field = AttractiveField(0,next.getCenterX(),next.getCenterY(),next.distance(current),next.distance(current),next.distance(current))
-            deltaX = field.calcVelocity(msg)[0]
-            deltaY = field.calcVelocity(msg)[1]
-
-            # Change twist.linear.x to be your desired x velocity
-            twist.linear.x = deltaX
-            # Change twist.linear.y to be your desired y velocity
-            twist.linear.y = deltaY
-            twist.linear.z = 0
-            twist.angular.x = 0
-            twist.angular.y = 0
-            twist.angular.z = 0
-            self.cmdVelPub.publish(twist)
+            if self.grid.cost(current,self.goal) < 40:
+		twist.linear.x = 0
+                twist.linear.y = 0
+                twist.linear.z = 0
+		twist.angular.x = 0
+		twist.angular.y = 0
+		twist.angular.z = 0
+		self.cmdVelPub.publish(twist)
+            else:
+		path, cost = self.grid.a_star(current,self.goal)
+		#print current.getCenterX()
+		#print current.getCenterY()
+		#print self.goal.getCenterX()
+		#print self.goal.getCenterY()
+		next = self.goal
+		while path[next] != current:
+		    next = path[next]
+		field = AttractiveField(0,next.getCenterX(),next.getCenterY(),self.grid.cost(current,next)*.85,1,3)
+		deltaX = field.calcVelocity(msg)[0]
+		deltaY = field.calcVelocity(msg)[1]
+                # Change twist.linear.x to be your desired x velocity
+		twist.linear.x = deltaX
+		# Change twist.linear.y to be your desired y velocity
+		twist.linear.y = deltaY
+		twist.linear.z = 0
+		twist.angular.x = 0
+		twist.angular.y = 0
+		twist.angular.z = 0
+		self.cmdVelPub.publish(twist)
 
     def start(self):
         rospy.wait_for_service("apriltags_info")
@@ -62,7 +70,10 @@ class Controller:
             resp = info_query()
             x = 0
             y = 0
+            print 'Entering for loop polygons'
+            index = -1
             for i in range(len(resp.polygons)):
+                #if self.debug: print type(resp)
                 poly = resp.polygons[i]
                 # The polygon's id (just an integer, 0 is goal, all else is bad)
                 t_id = resp.ids[i]
@@ -72,17 +83,20 @@ class Controller:
                         y = y + int(p.y)
                     x = x / len(poly.points)
                     y = y / len(poly.points)
-
-                    resp.polygons.pop(i)
+                    index = i
+            if index >=0:
+                poly = resp.polygons.pop(index)
             self.grid = Grid(40, 30, resp.polygons)
             self.goal = self.grid.find(x,y)
-            print self.grid.toString()
+            if self.debug: print 'after find'
+            if self.debug: print self.grid.toString()
 
             # Creates a 30 x 40 grid
 
 
         except Exception, e:
-            print "Exception: " + str(e)
+            #print "Exception: " + str(e)
+            traceback.print_exc()
         finally:
             self.stop = False
 

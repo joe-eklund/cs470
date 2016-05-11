@@ -19,6 +19,7 @@ class PriorityQueue:
 
 class Grid:
     def __init__(self,x,y,polygons):
+        self.debug = True
         #self.start = None
         self.x = x
         self.y = y
@@ -121,7 +122,7 @@ class Node:
         for point in points:
             self.centerX += point[0]
             self.centerY += point[1]
-            self.centerX = self.centerX/len(points)
+        self.centerX = self.centerX/len(points)
         self.centerY = self.centerY/len(points)
         self.neighbors = []
         self.overlap = False
@@ -138,12 +139,12 @@ class Node:
     def overlaps(self,poly):
         if self.maxX() < self.minPolyX(poly):
             return False
-        elif self.minX() > self.maxPolyX(poly):
+        if self.minX() > self.maxPolyX(poly):
             return False
 
         if self.maxY() < self.minPolyY(poly):
             return False
-        elif self.minY() > self.maxPolyX(poly):
+        if self.minY() > self.maxPolyY(poly):
             return False
         return True
 

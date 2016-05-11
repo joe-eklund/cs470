@@ -22,7 +22,7 @@ class Grid:
         #self.start = None
         self.x = x
         self.y = y
-        self.nodes = [[None for i in range(self.y)] for j in range(self.x)]
+        self.nodes = [[None for a in range(self.y)] for a in range(self.x)]
         for i in range(self.x):
             for j in range(self.y):
                 pointX = i*20

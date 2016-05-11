@@ -11,85 +11,55 @@ import traceback
 from AStar import Node
 
 # You implement this class
-from AStar import Grid
+from RRT import Tree, Obstacle, Vertex
 
 
 class Controller:
     stop = True # This is set to true when the stop button is pressed
-    X = 800
-    Y = 600
 
     def __init__(self):
         self.cmdVelPub = rospy.Publisher('cmd_vel', Twist, queue_size=1)
         self.trackposSub = rospy.Subscriber("tracked_pos", Pose2D, self.trackposCallback)
-        self.grid = Grid(40,30, [])
-        # self.grid = None
-        # self.goal = None
-	self.goal = Node([])
-        self.debug = True
+        self.tree = {}
+        self.obstacles = []
+        self.goal = {}
 
     def trackposCallback(self, msg):
         # This function is continuously called
         if not self.stop:
             twist = Twist()
-            current = self.grid.find(int(msg.x),int(msg.y))
-            if self.grid.cost(current,self.goal) < 40:
-		twist.linear.x = 0
-                twist.linear.y = 0
-                twist.linear.z = 0
-		twist.angular.x = 0
-		twist.angular.y = 0
-		twist.angular.z = 0
-		self.cmdVelPub.publish(twist)
-            else:
-		path, cost = self.grid.a_star(current,self.goal)
-		#print current.getCenterX()
-		#print current.getCenterY()
-		#print self.goal.getCenterX()
-		#print self.goal.getCenterY()
-		next = self.goal
-		while path[next] != current:
-		    next = path[next]
-		field = AttractiveField(0,next.getCenterX(),next.getCenterY(),self.grid.cost(current,next)*0.85,1,3)
-		deltaX = field.calcVelocity(msg)[0]
-		deltaY = field.calcVelocity(msg)[1]
-                # Change twist.linear.x to be your desired x velocity
-		twist.linear.x = deltaX
-		# Change twist.linear.y to be your desired y velocity
-		twist.linear.y = deltaY
-		twist.linear.z = 0
-		twist.angular.x = 0
-		twist.angular.y = 0
-		twist.angular.z = 0
-		self.cmdVelPub.publish(twist)
+            tree = Tree(self.obstacles)
+            start = Vertex(int(msg.x),int(msg.y))
+            next = tree.create(start,self.goal)
+            field = AttractiveField(0,next.x,next.y,start.distance(next),1,3)
+
+            deltaX = field.calcVelocity(msg)[0]
+            deltaY = field.calcVelocity(msg)[1]
+                    # Change twist.linear.x to be your desired x velocity
+            twist.linear.x = deltaX
+            # Change twist.linear.y to be your desired y velocity
+            twist.linear.y = deltaY
+            twist.linear.z = 0
+            twist.angular.x = 0
+            twist.angular.y = 0
+            twist.angular.z = 0
+            self.cmdVelPub.publish(twist)
 
     def start(self):
         rospy.wait_for_service("apriltags_info")
         try:
             info_query = rospy.ServiceProxy("apriltags_info", apriltags_info)
             resp = info_query()
-            x = 0
-            y = 0
             print 'Entering for loop polygons'
-            index = -1
             for i in range(len(resp.polygons)):
                 #if self.debug: print type(resp)
                 poly = resp.polygons[i]
                 # The polygon's id (just an integer, 0 is goal, all else is bad)
                 t_id = resp.ids[i]
                 if t_id == 0:
-                    for p in poly.points:
-                        x = x + int(p.x)
-                        y = y + int(p.y)
-                    x = x / len(poly.points)
-                    y = y / len(poly.points)
-                    index = i
-            if index >=0:
-                poly = resp.polygons.pop(index)
-            self.grid = Grid(40, 30, resp.polygons)
-            self.goal = self.grid.find(x,y)
-            if self.debug: print 'after find'
-            if self.debug: print self.grid.toString()
+                    self.goal = Obstacle(poly.points)
+                else:
+                    self.obstacles.append(Obstacle(poly.points))
 
             # Creates a 30 x 40 grid
 

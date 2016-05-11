@@ -92,7 +92,7 @@ class Grid:
             if current == goal:
                 print "Found goal"
                 break
-            print str(",".join(current.getNeighbors()))
+            print str(current.getNeighbors())
             for next in current.getNeighbors():
                 new_cost = cost_so_far[current] + self.cost(current, next)
                 if next not in cost_so_far or new_cost < cost_so_far[next]:

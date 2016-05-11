@@ -121,14 +121,14 @@ class Node:
         return self.neighbors
 
     def overlaps(self,poly):
-        if self.maxX() < self.minX(poly):
+        if self.maxX() < self.minPolyX(poly):
             return False
-        elif self.minX() > self.maxX(poly):
+        elif self.minX() > self.maxPolyX(poly):
             return False
 
-        if self.maxY() < self.minY(poly):
+        if self.maxY() < self.minPolyY(poly):
             return False
-        elif self.minY() > self.maxX(poly):
+        elif self.minY() > self.maxPolyX(poly):
             return False
         return True
 
@@ -169,25 +169,25 @@ class Node:
                 min = point[1]
         return min
 
-    def maxX(self, poly):
+    def maxPolyX(self, poly):
         max = 0
         for point in poly.points:
             if point.x > max:
                 max = point.x
         return max
-    def minX(self,poly):
+    def minPolyX(self, poly):
         min = 900
         for point in poly.points:
             if point.x < min:
                 min = point.x
         return min
-    def maxY(self,poly):
+    def maxPolyY(self, poly):
         max = 0
         for point in poly.points:
             if point.y > max:
                 max = point.y
         return max
-    def minY(self,poly):
+    def minPolyY(self, poly):
         min = 700
         for point in poly.points:
             if point.y < min:

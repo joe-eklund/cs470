@@ -73,7 +73,7 @@ class Controller:
                     x = x / len(poly.points)
                     y = y / len(poly.points)
                     self.goal = self.grid.find(x,y)
-                    resp.polygons.remove(poly)
+                    resp.polygons.pop(i)
             self.grid = Grid(40, 30, resp.polygons)
             print self.grid.toString()
 

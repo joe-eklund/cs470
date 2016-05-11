@@ -50,7 +50,7 @@ class Controller:
 		next = self.goal
 		while path[next] != current:
 		    next = path[next]
-		field = AttractiveField(0,next.getCenterX(),next.getCenterY(),self.grid.cost(current,next)*0.85,1,3)
+		field = AttractiveField(0,next.getCenterX(),next.getCenterY(),self.grid.cost(current,next)*4.5,1,3)
 		deltaX = field.calcVelocity(msg)[0]
 		deltaY = field.calcVelocity(msg)[1]
                 # Change twist.linear.x to be your desired x velocity

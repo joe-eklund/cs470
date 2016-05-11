@@ -49,7 +49,6 @@ class Controller:
         try:
             info_query = rospy.ServiceProxy("apriltags_info", apriltags_info)
             resp = info_query()
-            print 'Entering for loop polygons'
             for i in range(len(resp.polygons)):
                 #if self.debug: print type(resp)
                 poly = resp.polygons[i]

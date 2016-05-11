@@ -13,6 +13,7 @@ class Tree:
         self.vertices.append(start)
         delta = 10
         stop = False;
+        final_vertex = Vertex(0,0)
         while not stop:
             rand_vertex = self.generateVertex()
             nearest = self.getNearest(rand_vertex)
@@ -26,7 +27,9 @@ class Tree:
                     stop = True;
                 self.addVertex(new_vertex)
                 self.addEdge(Edge(nearest,new_vertex))
-        next = goal
+                final_vertex = new_vertex
+                # print str(len(self.vertices)) + "X: " + str(new_vertex.x) + " Y: " + str(new_vertex.y)
+        next = final_vertex
         while next!=start:
             next = self.backTrack(next);
         return next
@@ -49,20 +52,23 @@ class Tree:
         if nearest.distance(rand) < delta:
             return rand
         else:
-            slope = (rand.y - nearest.y)/(rand.x - nearest.y)
+            if rand.x - nearest.y == 0:
+                slope = 0
+            else:
+                slope = (rand.y - nearest.y)/(rand.x - nearest.y)
             x = 0
             y = 0
             if rand.x > nearest.x:
-                x = nearest.x + delta/(math.sqrt(1 + math.pow(slope,2)))
+                x = math.floor(nearest.x + delta/(math.sqrt(1 + math.pow(slope,2))))
             else:
-                x = nearest.x - delta/(math.sqrt(1+math.pow(slope,2)))
-            y = slope * x + nearest.y
+                x = math.floor(nearest.x - delta/(math.sqrt(1+math.pow(slope,2))))
+            y = math.floor(slope * x + nearest.y)
             new_vertex = Vertex(x,y)
             return new_vertex
     def backTrack(self,vertex):
-        for v in self.vertices:
-            if v.vertex2 == vertex:
-                return v.vertex1
+        for edge in self.edges:
+            if edge.vertex2 == vertex:
+                return edge.vertex1
 
 
 class Vertex:
@@ -109,3 +115,9 @@ class Obstacle:
             if point.y > max:
                 max = point.y
         return min, max
+
+if __name__ == '__main__':
+    tree = Tree([])
+    start = Vertex(20,20)
+    goal = Vertex(70,80)
+    tree.create(start,goal)

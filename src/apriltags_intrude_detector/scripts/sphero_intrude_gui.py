@@ -75,7 +75,7 @@ class Controller:
                     x = x / len(poly.points)
                     y = y / len(poly.points)
                     self.goal = self.grid.find(x,y)
-            # Creates a 40 x 30 grid
+            # Creates a 30 x 40 grid
 
 
         except Exception, e:

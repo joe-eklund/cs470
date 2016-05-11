@@ -107,7 +107,7 @@ class Grid:
     def find(self,x,y):
         xcoord = math.floor(x/20)
         ycoord = math.floor(y/20)
-        return self.nodes[int(xcoord)][int(ycoord)]
+        return self.nodes[int(ycoord)][int(xcoord)]
 
 class Node:
 

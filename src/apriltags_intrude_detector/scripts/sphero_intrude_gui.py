@@ -28,9 +28,12 @@ class Controller:
         # This function is continuously called
         if not self.stop:
             if len(self.path)==0:
+                print "Creating path"
                 tree = Tree(self.obstacles)
                 start = Vertex(int(msg.x),int(msg.y))
                 self.path = tree.create(start,self.goal)
+                for p in self.path:
+                    print "X: "+str(p.x) + " Y: " + str(p.y)
             twist = Twist()
             index = len(self.path)-1
             next = self.path[index]

@@ -122,7 +122,7 @@ class Obstacle:
 if __name__ == '__main__':
     tree = Tree([])
     start = Vertex(20,20)
-    goal = Vertex(70,80)
+    goal = Vertex(500,500)
     path = tree.create(start,goal)
     for p in path:
         print "X: "+str(p.x) + " Y: " + str(p.y)

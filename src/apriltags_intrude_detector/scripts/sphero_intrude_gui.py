@@ -39,7 +39,7 @@ class Controller:
             next = self.path[index]
             current = Vertex(int(msg.x),int(msg.y))
             if current.distance(next) < 5:
-                self.path.pop[index]
+                self.path.pop(index)
                 next = self.path[index-1]
             field = AttractiveField(0,next.x,next.y,start.distance(next),1,3)
 

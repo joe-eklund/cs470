@@ -41,7 +41,7 @@ class Controller:
             if current.distance(next) < 5:
                 self.path.pop(index)
                 next = self.path[index-1]
-            field = AttractiveField(0,next.x,next.y,start.distance(next),1,3)
+            field = AttractiveField(0,next.x,next.y,current.distance(next),1,3)
 
             deltaX = field.calcVelocity(msg)[0]
             deltaY = field.calcVelocity(msg)[1]

@@ -12,6 +12,7 @@ class Tree:
     def create(self,start,goal):
         self.vertices.append(start)
         delta = 10
+        path = []
         stop = False;
         final_vertex = Vertex(0,0)
         while not stop:
@@ -30,9 +31,11 @@ class Tree:
                 final_vertex = new_vertex
                 # print str(len(self.vertices)) + "X: " + str(new_vertex.x) + " Y: " + str(new_vertex.y)
         next = final_vertex
+        path.append(final_vertex)
         while next!=start:
             next = self.backTrack(next);
-        return next
+            path.append(next)
+        return path
 
     def addVertex(self, vertex):
         self.vertices.append(vertex)
@@ -62,7 +65,7 @@ class Tree:
                 x = math.floor(nearest.x + delta/(math.sqrt(1 + math.pow(slope,2))))
             else:
                 x = math.floor(nearest.x - delta/(math.sqrt(1+math.pow(slope,2))))
-            y = math.floor(slope * x + nearest.y)
+            y = math.floor(slope * (x - nearest.x) + nearest.y)
             new_vertex = Vertex(x,y)
             return new_vertex
     def backTrack(self,vertex):
@@ -120,4 +123,6 @@ if __name__ == '__main__':
     tree = Tree([])
     start = Vertex(20,20)
     goal = Vertex(70,80)
-    tree.create(start,goal)
+    path = tree.create(start,goal)
+    for p in path:
+        print "X: "+str(p.x) + " Y: " + str(p.y)

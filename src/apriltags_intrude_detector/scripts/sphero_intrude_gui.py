@@ -21,15 +21,23 @@ class Controller:
         self.cmdVelPub = rospy.Publisher('cmd_vel', Twist, queue_size=1)
         self.trackposSub = rospy.Subscriber("tracked_pos", Pose2D, self.trackposCallback)
         self.obstacles = []
+        self.path = []
         self.goal = Vertex(0,0)
 
     def trackposCallback(self, msg):
         # This function is continuously called
         if not self.stop:
+            if len(self.path)==0:
+                tree = Tree(self.obstacles)
+                start = Vertex(int(msg.x),int(msg.y))
+                self.path = tree.create()
             twist = Twist()
-            tree = Tree(self.obstacles)
-            start = Vertex(int(msg.x),int(msg.y))
-            next = tree.create(start,self.goal)
+            index = len(self.path)-1
+            next = self.path[index]
+            current = Vertex(int(msg.x),int(msg.y))
+            if current.distance(next) < 5:
+                self.path.pop[index]
+                next = self.path[index-1]
             field = AttractiveField(0,next.x,next.y,start.distance(next),1,3)
 
             deltaX = field.calcVelocity(msg)[0]

@@ -30,7 +30,7 @@ class Controller:
             if len(self.path)==0:
                 tree = Tree(self.obstacles)
                 start = Vertex(int(msg.x),int(msg.y))
-                self.path = tree.create()
+                self.path = tree.create(start,self.goal)
             twist = Twist()
             index = len(self.path)-1
             next = self.path[index]

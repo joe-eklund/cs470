@@ -18,18 +18,26 @@ class Tree:
         while not stop:
             rand_vertex = self.generateVertex()
             nearest = self.getNearest(rand_vertex)
-            new_vertex = self.getNew(nearest,rand_vertex,delta)
-            invalid = False
-            for obstacle in self.obstacles:
-                if obstacle.contains(new_vertex):
-                    invalid = True
-            if not invalid:
-                if goal.distance(new_vertex) < delta:
-                    stop = True;
-                self.addVertex(new_vertex)
-                self.addEdge(Edge(nearest,new_vertex))
-                final_vertex = new_vertex
-                # print str(len(self.vertices)) + "X: " + str(new_vertex.x) + " Y: " + str(new_vertex.y)
+            increment = 10
+            valid = True
+            new_vertex = Vertex(0,0)
+            while increment < delta and valid:
+                temp_vertex = self.getNew(nearest,rand_vertex,increment)
+                for obstacle in self.obstacles:
+                    if not obstacle.contains(temp_vertex):
+                        new_vertex = temp_vertex
+                    else:
+                        valid = False
+                        break
+                increment = increment + 10
+            if new_vertex.x ==0 and new_vertex.y == 0:
+                continue
+            if goal.distance(new_vertex) < delta:
+                stop = True;
+            self.addVertex(new_vertex)
+            self.addEdge(Edge(nearest,new_vertex))
+            final_vertex = new_vertex
+            # print str(len(self.vertices)) + "X: " + str(new_vertex.x) + " Y: " + str(new_vertex.y)
         next = final_vertex
         path.append(final_vertex)
         while next!=start:
@@ -52,22 +60,22 @@ class Tree:
                 nearestVertex = vertex
         return nearestVertex
     def getNew(self,nearest,rand,delta):
-        if nearest.distance(rand) < delta:
-            return rand
+        # if nearest.distance(rand) < delta:
+        #     return rand
+        # else:
+        if rand.x - nearest.y == 0:
+            slope = 0
         else:
-            if rand.x - nearest.y == 0:
-                slope = 0
-            else:
-                slope = (rand.y - nearest.y)/(rand.x - nearest.y)
-            x = 0
-            y = 0
-            if rand.x > nearest.x:
-                x = math.floor(nearest.x + delta/(math.sqrt(1 + math.pow(slope,2))))
-            else:
-                x = math.floor(nearest.x - delta/(math.sqrt(1+math.pow(slope,2))))
-            y = math.floor(slope * (x - nearest.x) + nearest.y)
-            new_vertex = Vertex(x,y)
-            return new_vertex
+            slope = (rand.y - nearest.y)/(rand.x - nearest.y)
+        x = 0
+        y = 0
+        if rand.x > nearest.x:
+            x = math.floor(nearest.x + delta/(math.sqrt(1 + math.pow(slope,2))))
+        else:
+            x = math.floor(nearest.x - delta/(math.sqrt(1+math.pow(slope,2))))
+        y = math.floor(slope * (x - nearest.x) + nearest.y)
+        new_vertex = Vertex(x,y)
+        return new_vertex
     def backTrack(self,vertex):
         for edge in self.edges:
             if edge.vertex2 == vertex:

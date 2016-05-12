@@ -11,7 +11,7 @@ class Tree:
         self.obstacles = obstacles
     def create(self,start,goal):
         self.vertices.append(start)
-        delta = 150
+        delta = 200
         path = []
         stop = False;
         final_vertex = Vertex(0,0)

@@ -23,6 +23,7 @@ class Controller:
         self.obstacles = []
         self.path = []
         self.goal = Vertex(0,0)
+        self.found = False
 
     def trackposCallback(self, msg):
         # This function is continuously called
@@ -38,13 +39,18 @@ class Controller:
             index = len(self.path)-1
             next = self.path[index]
             current = Vertex(int(msg.x),int(msg.y))
-            if current.distance(next) < 5:
+            if current.distance(next) < 20:
                 self.path.pop(index)
                 next = self.path[index-1]
-            field = AttractiveField(0,next.x,next.y,current.distance(next)*1.5,1,3)
-
-            deltaX = field.calcVelocity(msg)[0]
-            deltaY = field.calcVelocity(msg)[1]
+            if len(self.path) == 0:
+                self.found = True
+            field = AttractiveField(0,next.x,next.y,20,1,3)
+            if self.found:
+                deltaX = 0
+                deltaY = 0
+            else:
+	        deltaX = field.calcVelocity(msg)[0]
+	        deltaY = field.calcVelocity(msg)[1]
                     # Change twist.linear.x to be your desired x velocity
             twist.linear.x = deltaX
             # Change twist.linear.y to be your desired y velocity
